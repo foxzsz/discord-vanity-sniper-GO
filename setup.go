@@ -16,6 +16,7 @@ type ConfigYaml struct {
 		Webhook        string `yaml:"webhook"`
 		GuildID        int    `yaml:"guildid"`
 		SocketUsage    bool   `yaml:"usesockets"`
+		Debug          bool   `yaml:"debug"`
 		SocketChannels int    `yaml:"socketchannels"`
 	} `yaml:"main"`
 }

@@ -5,20 +5,23 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
+	"os/exec"
 	"sync"
 	"time"
 )
 
 // Define all import variables
 var (
-	Token         string
-	ProxyChannel  chan string
-	ProxyList     []string
-	VanityChecks  int
-	VanityList    []string
-	Client        http.Client
-	Config        ConfigYaml
-	SocketChannel chan *tls.Conn
+	Token             string
+	ProxyChannel      chan string
+	ProxyList         []string
+	VanityChecks      int
+	VanityList        []string
+	Client            http.Client
+	Config            ConfigYaml
+	SocketChannel     chan *tls.Conn
+	currentlysleeping int
 )
 
 func SnipingThread(Vanity string) {
@@ -40,19 +43,28 @@ func SnipingThread(Vanity string) {
 			// Define errors and response
 			var errs int
 			var res int
+			var start time.Time
+			var elapsed time.Duration
 		checkloop:
 			for {
 				// Measure start time
-				start := time.Now()
+				if Config.Main.Debug == true {
+					start = time.Now()
+				}
 				// Do vanity check
 				res = VanityCheck(Vanity, defaultclient)
 				// Calculate time taken for Vanity check
-				elapsed := time.Since(start)
+				if Config.Main.Debug == true {
+					elapsed = time.Since(start)
+				}
+
 				// Check response code
 				switch res {
 				case 404: //Claim
 					// Snipe depending on what mode is enabled
-					fmt.Println("vanity is free attempting claim...")
+					if Config.Main.Debug == true {
+						fmt.Println("vanity is free attempting claim...")
+					}
 					if Config.Main.SocketUsage == true {
 						SnipeUsingSocket(Vanity, Config.Main.GuildID)
 					} else {
@@ -61,18 +73,26 @@ func SnipingThread(Vanity string) {
 				case 200:
 					// Continue checking
 					VanityChecks++
-					fmt.Println(fmt.Sprintf("%d vanity checks, took %s, current check: %s", VanityChecks, elapsed, Vanity))
+					if Config.Main.Debug == true {
+						fmt.Println(fmt.Sprintf("%d vanity checks, took %s, current check: %s", VanityChecks, elapsed, Vanity))
+					}
 				case 429:
 					// If ratelimited break out of loop...
-					fmt.Println("proxy ratelimited switching...")
+					if Config.Main.Debug == true {
+						fmt.Println("proxy ratelimited switching...")
+					}
 					break checkloop
 				default:
 					// Bad response mainly 0, meaning the proxy is bad or there is an error with the request
-					fmt.Println(fmt.Sprintf("got bad response with status code: %d", res))
+					if Config.Main.Debug == true {
+						fmt.Println(fmt.Sprintf("got bad response with status code: %d", res))
+					}
 					errs++
 					// Maximum amount of errors before proxy is deemed invalid
 					if errs > 20 {
-						fmt.Println("exceeded error threshold")
+						if Config.Main.Debug == true {
+							fmt.Println("exceeded error threshold")
+						}
 						break checkloop
 					}
 
@@ -89,8 +109,24 @@ func SnipingThread(Vanity string) {
 
 func sleeper(proxy string) {
 	// Sleep....
+	currentlysleeping++
 	time.Sleep(30 * time.Second)
+	currentlysleeping--
 	ProxyChannel <- proxy
+}
+
+func updater() {
+	var prev int
+	for {
+		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+		checkspersec := (VanityChecks - prev) / 5
+		prev = VanityChecks
+
+		LogInfo(fmt.Sprintf("total vanity checks %d, currently sleeping %d, checks per second %d", VanityChecks, currentlysleeping, checkspersec))
+		time.Sleep(5 * time.Second)
+	}
 }
 
 // Create socket channels for claiming
@@ -110,6 +146,8 @@ func main() {
 	// Setup sniper..
 	SetupSniper()
 
+	ProxyChannel = make(chan string, len(ProxyList))
+
 	// Start threads
 	for _, vanity := range VanityList {
 		// Initiate threads
@@ -127,11 +165,14 @@ func main() {
 
 	}
 
-	ProxyChannel = make(chan string, len(ProxyList))
-
 	// Add proxylist to channel
 	for _, proxy := range ProxyList {
 		ProxyChannel <- proxy
+	}
+
+	if Config.Main.Debug == false {
+		go updater()
+
 	}
 
 	wg.Wait()

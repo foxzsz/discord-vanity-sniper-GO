@@ -12,4 +12,5 @@ main:
   usesockets: false
   ## Amount of socket channels, ignore this if you are not using the usesockets option
   socketchannels: 10
+  debug: false
 
