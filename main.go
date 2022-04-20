@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
-	_ "net/http/pprof"
 	"net/url"
 	"sync"
 	"time"
