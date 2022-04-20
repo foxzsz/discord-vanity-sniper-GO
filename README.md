@@ -1,4 +1,6 @@
 # discord-sniper-GO
+![image](https://user-images.githubusercontent.com/82937328/164210653-bc018e3b-d2f7-4a6d-b013-623c29c4f58d.png)
+
 **discord-sniper-GO** is a very-fast and efficient mulithreaded tool used to snipe discord vanities with ease. 
 
 ## **Features** :
