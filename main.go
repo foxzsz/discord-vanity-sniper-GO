@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
-	"os/exec"
 	"sync"
 	"time"
 )
@@ -118,11 +116,9 @@ func sleeper(proxy string) {
 func updater() {
 	var prev int
 	for {
-		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
-		cmd.Stdout = os.Stdout
-		cmd.Run()
 		checkspersec := (VanityChecks - prev) / 5
 		prev = VanityChecks
+		Clear()
 
 		LogInfo(fmt.Sprintf("total vanity checks %d, currently sleeping %d, checks per second %d", VanityChecks, currentlysleeping, checkspersec))
 		time.Sleep(5 * time.Second)
