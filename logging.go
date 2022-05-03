@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/gookit/color"
@@ -38,6 +39,12 @@ func LogFatal(m string) {
 	color.Printf("<fg=white>[</><fg=red;op=bold>FATAL</><fg=white>]</> » %s\n", m)
 	color.Printf("<fg=white>[</><fg=red;op=bold>LOG</><fg=white>]</> » exitting\n")
 	os.Exit(0)
+}
+
+func Clear() {
+	cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }
 
 //
