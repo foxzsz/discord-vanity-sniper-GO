@@ -3,7 +3,7 @@
 
 **discord-sniper-GO** is a very-fast and efficient mulithreaded tool used to snipe discord vanities with ease. 
 
-**NOTE: I haven't fully tested this with very rare vanities, so do let me know what your experience with this tool is on telegram: @uceicViwpvBo**
+**NOTE: As I haven't fully tested this with high-tier vanities, it is recommended to first test it on a free/claimable vanity before attempting to swap anything high-tier to ensure that the account  is able to claim. If you use this tool to swap / autoclaim high-tier vanitys please do let me know what your experience with this tool is on telegram: @uceicViwpvBo**
 
 ## **Features** :
 - Automatically send notifications to webhook
