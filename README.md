@@ -20,6 +20,14 @@
 5) Run the binary and wait for the program to snipe
 
 
+## How to build from source
+1) First download the suitable golang version from the following link: https://go.dev/dl/
+2) Clone / download the code from this github repository
+3) Either cd to the directory where the code is or open a terminal in the directory
+4) Type go build .
+5) Then you should have a executable which you can then use too snipe
+
+
 ## Configuration
 
 | Name | Description | 
