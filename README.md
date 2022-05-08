@@ -3,6 +3,8 @@
 
 **discord-sniper-GO** is a very-fast and efficient mulithreaded tool used to snipe discord vanities with ease. 
 
+**NOTE: I haven't fully tested this with very rare vanities, so do let me know what your experience with this tool is on telegram: @uceicViwpvBo**
+
 ## **Features** :
 - Automatically send notifications to webhook
 - Supports sniping a lot of vanities simultaneously
