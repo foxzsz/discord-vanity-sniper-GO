@@ -21,11 +21,9 @@
 
 
 ## How to build from source
-1) First download the suitable golang version from the following link: https://go.dev/dl/
-2) Clone / download the code from this github repository
-3) Either cd to the directory where the code is or open a terminal in the directory
-4) Type go build .
-5) Then you should have a executable which you can then use too snipe
+1) Download and install [Golang](https://go.dev/) and verify your installation
+2) Open a terminal window/ command prompt in the directory of the source code and type `go build`
+3) A binary compatible with your OS/Arch should be made. If there are some problems on MacOS/Linux with executing the binary as a program. You can run this command `chmod +x ./discord-vanity-sniper-GO` or go to properties -> permissions -> Allow executing file as program. 
 
 
 ## Configuration
