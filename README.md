@@ -36,3 +36,6 @@
 | `guildid` | Guildid of server which has access to the vanity feature
 | `usesockets` | It is recommended to leave this option disabled unless you know how the code works, as it is currently experimental
 | `socketchannels` | Amount of socket channels, ignore this if you are not using the usesockets option
+
+## Credits
+[Vanshaj](https://github.com/V4NSH4J) Helped me improve on the code and gave great suggestions, also got the 'how to build from source' section from his github.
