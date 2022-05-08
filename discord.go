@@ -87,6 +87,7 @@ func FastHttpClaim(vanity string, guildid int) {
 	req.SetRequestURI(fmt.Sprintf("https://discord.com/api/v9/guilds/%d/vanity-url", guildid))
 	res := fasthttp.AcquireResponse()
 	if err := fastclient.Do(req, res); err != nil {
+		LogErr(fmt.Sprintf("error while claiming %s", err))
 		SendFail(vanity, "", "0")
 	}
 	fasthttp.ReleaseRequest(req)
