@@ -1,6 +1,6 @@
 
 main:
-  ## Amount of goroutines per vanity, if there are 5 vanities and amplify is 6 it means there will be 6 goroutines per vanity
+  ## Amount of goroutines per vanity, if there are 5 vanities and amplify is 6 it means there will be 6 goroutines/threads per vanity with 30 goroutines running in total
   amplify: 1
   ## Discord token which has access to changing the vanity of server
   token: 
