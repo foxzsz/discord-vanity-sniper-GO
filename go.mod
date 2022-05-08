@@ -1,4 +1,4 @@
-module github.com/foxzsz/discord-sniper-GO
+module github.com/foxzsz/discord-vanity-sniper-GO
 
 go 1.18
 
