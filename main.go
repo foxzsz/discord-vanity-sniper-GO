@@ -66,7 +66,7 @@ func SnipingThread(Vanity string) {
 					if Config.Main.SocketUsage == true {
 						SnipeUsingSocket(Vanity, Config.Main.GuildID)
 					} else {
-						FastHttpTest(Vanity, Config.Main.GuildID)
+						FastHttpClaim(Vanity, Config.Main.GuildID)
 					}
 				case 200:
 					// Continue checking

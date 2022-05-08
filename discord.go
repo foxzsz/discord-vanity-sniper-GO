@@ -18,9 +18,19 @@ var (
 		ReadBufferSize:      8192000,
 		ReadTimeout:         time.Duration(1) * time.Second,
 		MaxIdleConnDuration: time.Duration(1) * time.Second,
-		TLSConfig:           &tls.Config{InsecureSkipVerify: true},
+		// prevent accs from getting locked
+		TLSConfig: &tls.Config{
+			MinVersion:         tls.VersionTLS12,
+			CipherSuites:       []uint16{0x1301, 0x1303, 0x1302, 0xc02b, 0xc02f, 0xcca9, 0xcca8, 0xc02c, 0xc030, 0xc00a, 0xc009, 0xc013, 0xc014, 0x009c, 0x009d, 0x002f, 0x0035},
+			InsecureSkipVerify: true,
+			CurvePreferences:   []tls.CurveID{tls.CurveID(0x001d), tls.CurveID(0x0017), tls.CurveID(0x0018), tls.CurveID(0x0019), tls.CurveID(0x0100), tls.CurveID(0x0101)},
+		},
 	}
 )
+
+const UserAgent = "Discord/32114 CFNetwork/1331.0.7 Darwin/21.4.0"
+const XTrack = "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRmlyZWZveCIsImRldmljZSI6IiIsInN5c3RlbV9sb2NhbGUiOiJlbi1VUyIsImJyb3dzZXJfdXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQ7IHJ2Ojk3LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTcuMCIsImJyb3dzZXJfdmVyc2lvbiI6Ijk3LjAiLCJvc192ZXJzaW9uIjoiMTAiLCJyZWZlcnJlciI6IiIsInJlZmVycmluZ19kb21haW4iOiIiLCJyZWZlcnJlcl9jdXJyZW50IjoiIiwicmVmZXJyaW5nX2RvbWFpbl9jdXJyZW50IjoiIiwicmVsZWFzZV9jaGFubmVsIjoic3RhYmxlIiwiY2xpZW50X2J1aWxkX251bWJlciI6OTk5OSwiY2xpZW50X2V2ZW50X3NvdXJjZSI6bnVsbH0="
+const XSuper = "eyJvcyI6ImlPUyIsImJyb3dzZXIiOiJEaXNjb3JkIGlPUyIsImRldmljZSI6ImlQYWQxMywxNiIsInN5c3RlbV9sb2NhbGUiOiJlbi1JTiIsImNsaWVudF92ZXJzaW9uIjoiMTI0LjAiLCJyZWxlYXNlX2NoYW5uZWwiOiJzdGFibGUiLCJkZXZpY2VfYWR2ZXJ0aXNlcl9pZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImRldmljZV92ZW5kb3JfaWQiOiJBMTgzNkNFRC1BRDI5LTRGRTAtQjVDNC0zODQ0NDU0MEFFQTciLCJicm93c2VyX3VzZXJfYWdlbnQiOiIiLCJicm93c2VyX3ZlcnNpb24iOiIiLCJvc192ZXJzaW9uIjoiMTUuNC4xIiwiY2xpZW50X2J1aWxkX251bWJlciI6MzIyNDcsImNsaWVudF9ldmVudF9zb3VyY2UiOm51bGx9"
 
 // Default vanity check function
 func VanityCheck(Vanity string, Client *http.Client) (status int) {
@@ -29,7 +39,7 @@ func VanityCheck(Vanity string, Client *http.Client) (status int) {
 		LogErr(fmt.Sprintf("error while doing req: %s", err))
 		return 0
 	}
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0")
+	req.Header.Set("User-Agent", UserAgent)
 	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
 
 	resp, err := Client.Do(req)
@@ -53,15 +63,27 @@ func CreateSocketChannel() *tls.Conn {
 }
 
 // Claim using fasthttp ( faster and better than sockets)
-func FastHttpTest(vanity string, guildid int) {
+func FastHttpClaim(vanity string, guildid int) {
 	start := time.Now()
 	req := fasthttp.AcquireRequest()
 	payload := []byte(fmt.Sprintf(`{"code": "%s"}`, vanity))
 	req.SetBody(payload)
 	req.Header.SetMethod("PATCH")
-	req.Header.Set("Authorization", Config.Main.Token)
-	req.Header.SetContentType("application/json")
-	req.Header.SetContentType("application/json")
+	// Headers
+	for k, v := range map[string]string{
+		"Host":               "discord.com",
+		"User-Agent":         UserAgent,
+		"Accept":             "*/*",
+		"Accept-Language":    "en-US,en;q=0.5",
+		"Content-Type":       "application/json",
+		"Authorization":      Config.Main.Token,
+		"X-Super-Properties": XSuper,
+		"X-Discord-Locale":   "en-US",
+		"X-Debug-Options":    "bugReporterEnabled",
+	} {
+		req.Header.Set(k, v)
+	}
+
 	req.SetRequestURI(fmt.Sprintf("https://discord.com/api/v9/guilds/%d/vanity-url", guildid))
 	res := fasthttp.AcquireResponse()
 	if err := fastclient.Do(req, res); err != nil {
