@@ -13,7 +13,7 @@
 
 
 ## Basic Usage
-1) Building the program by source
+1) Build the program from source or download a pre-built version for your OS & Arch from [releases](https://github.com/foxzsz/discord-vanity-sniper-GO/releases)
 2) Open the input folder
 2) Configure your "config.yml" file ( webhook, guildid, amplify and token)
 3) Add your proxies to the "proxies.txt" file
