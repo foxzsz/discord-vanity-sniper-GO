@@ -23,7 +23,7 @@ type ConfigYaml struct {
 
 // Load Yaml config
 func LoadYaml() {
-	cf, err := os.Open("config.yaml")
+	cf, err := os.Open("input/config.yaml")
 	if err != nil {
 		LogFatal(fmt.Sprintf("error while reading config file ensure that the file exists and is properly formatted, %s", err.Error()))
 	}
@@ -42,7 +42,7 @@ func SetupSniper() {
 	PrintLogo()
 
 	// Read proxies from file
-	proxyFile, err := os.Open("proxies.txt")
+	proxyFile, err := os.Open("input/proxies.txt")
 	if err != nil {
 		LogFatal("no proxies.txt file found! Ensure that the proxies.txt file exists in the current directory")
 	}
@@ -55,7 +55,7 @@ func SetupSniper() {
 	}
 
 	// Read vanities from file
-	vanityFile, err := os.Open("vanities.txt")
+	vanityFile, err := os.Open("input/vanities.txt")
 	if err != nil {
 		LogFatal("no vanities.txt file found! Ensure that the vanities.txt file exists in the current directory")
 	}
