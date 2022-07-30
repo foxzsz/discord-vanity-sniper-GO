@@ -3,7 +3,7 @@
 
 **discord-sniper-GO** is a very-fast and efficient mulithreaded tool used to snipe discord vanities with ease. 
 
-**NOTE: As I haven't fully tested this with high-tier vanities, it is recommended to first test it on a free/claimable vanity before attempting to swap anything high-tier to ensure that the account  is able to claim. If you use this tool to swap / autoclaim high-tier vanitys please do let me know what your experience with this tool is on telegram: @uceicViwpvBo**
+**NOTE: It is recommended to first test it on a free/claimable vanity before attempting to swap anything high-tier to ensure that the account is able to claim.
 
 ## **Features** :
 - Automatically send notifications to webhook
@@ -14,6 +14,7 @@
 
 ## Basic Usage
 1) Building the program by source
+2) Open the input folder
 2) Configure your "config.yml" file ( webhook, guildid, amplify and token)
 3) Add your proxies to the "proxies.txt" file
 4) Add your vanity list to the "vanities.txt" file
